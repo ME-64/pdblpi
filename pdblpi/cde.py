@@ -199,6 +199,7 @@ def _attempt_upload_request(con, upload_request,# {{{
     result_status_code = None
     while result_status_code != 'S_SUCCESS' and attempts_remaining:
         attempts_remaining -= 1
+        print(f'retries remaining: {attempts_remaining}')
         try:
             request = con.cdeService.createRequest('uploadRequest')
             fill_element(request.asElement(), upload_request.to_dict())
@@ -217,7 +218,19 @@ def _send_upload_requests(con, upload_requests):# {{{
     # enumerate requests for in case of error
     for num, upload_request in enumerate(upload_requests):
         result, status = _attempt_upload_request(con, upload_request)
-        if status != 'S_SUCCESS':
+        try:
+            partial = result['element']['uploadResponse']['returnStatus']['returnStatus']['notifications'][0]['notifications']['message']
+            print(partial)
+            if partial == 'WRITE_PARTIALLY_FAILED':
+                partial = True
+            else:
+                partial = False
+        except Exception as e:
+            print(e)
+            partial = False
+
+        # partial upload error - not sure why some tickers don't like uploads
+        if (status != 'S_SUCCESS') and not partial:
             raise ValueError(f'Upload request failed with msg {result} and status {status}')# }}}
 
 def _run_field_upload(con, ticker, as_of_date, field):# {{{
@@ -238,11 +251,11 @@ def _run_df_upload(con, df):# {{{
 
     if (len(fields) < 1) or ('ticker' not in cols) or ('date' not in cols):
         raise Exception(f'DataFrame must have columns: `ticker`, `date`, and'
-                        'atleast one CDE field. Instead df had: {cols}')
+                        f'atleast one CDE field. Instead df had: {cols}')
 
     for field in fields:
         tmp = df[['ticker', 'date', field]].copy()
-        tmp = tmp.loc[~tmp[field].isna()]
+        tmp = tmp.loc[~tmp[field].isna()].reset_index(drop=True)
         _run_field_upload(con, tmp['ticker'], tmp['date'], tmp[field])
         print(f'upload for field {field} complete with {tmp.shape[0]} records')
         # }}}

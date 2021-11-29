@@ -214,7 +214,6 @@ class BCon(object):
             raise ConnectionError("Could not open a //blp/instruments service")
         self.instrService = self._session.getService('//blp/instruments')
 
-
         opened = self._session.openService("//blp/cdeuupl")
         ev = self._session.nextEvent()
         ev_name = _EVENT_DICT[ev.eventType()]
@@ -1125,7 +1124,8 @@ def custom_req(session, request):# {{{
 
 
 
-# extending pandas dataframe to make methods easily accessible
+# ----- depreciated interface
+# extending pandas dataframe to make methods easily accessible{{{
 @pd.api.extensions.register_series_accessor('bbg')
 class BBG:
     def __init__(self, pandas_obj):
@@ -1288,11 +1288,9 @@ def get_etf_memb(ticker):# {{{
 #         if found:
 #             break
 #     if not found:
-#         raise Exception('No running excel instance with excel addin found')}}}
+#         raise Exception('No running excel instance with excel addin found')}}}}}}
+# ----- depreciated interface
 
-
-
-# easy and intuitive functions that mirror excel
 
 def _BDP(tickers, field, **field_ovrds):# {{{
 
@@ -1995,7 +1993,7 @@ def _parse_tickers(tickers):# {{{
     sedol = re.compile(r"^[A-Z0-9]{7}(?:@|\s)")
 
     for ticker in tickers:
-        if isin.match(ticker):
+        if isin.match(ticker) and 'FIGI' not in ticker:
             # i = isin.match(ticker)[0][:-1]
             i = ticker.split()[0]
             # i = [str(x) for x in i] # not sure if this is needed now
@@ -2016,6 +2014,14 @@ def _parse_tickers(tickers):# {{{
             else:
                 e = ''
             new_tick.append(f'/sedol/{s}{e}')
+        elif ' FIGI' in ticker:
+            s = ticker.split()[0]
+            e = exch.findall(ticker)
+            if e:
+                e = ' ' + e[0].strip()
+            else:
+                e = ''
+            new_tick.append(f'/bbgid/{s}/{e}')
         else:
             new_tick.append(ticker)
 

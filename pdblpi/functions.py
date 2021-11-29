@@ -392,7 +392,7 @@ def BDS(tickers, field, **field_ovrds):# {{{
     """
     return _BDS(tickers, field, **field_ovrds)# }}}
 
-def BEQS(eqs_screen_name, as_of_date='today'):# {{{
+def BEQS(eqs_screen_name, as_of_date=None):# {{{
     """
     Parameters
     ----------
@@ -420,7 +420,7 @@ def BEQS(eqs_screen_name, as_of_date='today'):# {{{
     >>> etfs = BEQS("Europe ETFs", as_of_date='20200101')
 
     """
-    return _BEQS(eqs_screen_name, as_of_date='today')# }}}
+    return _BEQS(eqs_screen_name, as_of_date=as_of_date)# }}}
 
 def BDIT(tickers, events, sd=None, ed=None, cond_codes=False, qrm=False, #{{{
         action_codes=False, exch_codes=False, broker_codes=False,

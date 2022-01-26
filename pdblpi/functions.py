@@ -7,7 +7,7 @@ def BDP(tickers, field, **field_ovrds):# {{{
     ----------
     tickers: one ticker or a list of tickers
         tickers should be specified in the same format as the excel API.
-        Currently Bloomberg Identifiers, ISINs and SEDOLs are supported.
+        Currently Bloomberg Identifiers, ISINs, FIGIs, and SEDOLs are supported.
         Valid Format Examples:
             > BBEG LN Equity
             > JRUD GR Equity
@@ -158,7 +158,7 @@ def BDH(tickers, field, start_date, end_date, cdr=None, fx=None, fill='B',# {{{
     ----------
     tickers: one ticker or a list of tickers
         tickers should be specified in the same format as the excel API.
-        Currently Bloomberg Identifiers, ISINs and SEDOLs are supported.
+        Currently Bloomberg Identifiers, ISINs, FIGIs, and SEDOLs are supported.
         Valid Format Examples:
             > BBEG LN Equity
             > JRUD GR Equity
@@ -353,7 +353,7 @@ def BDS(tickers, field, **field_ovrds):# {{{
     ----------
     tickers: one ticker or a list of tickers
         tickers should be specified in the same format as the excel API.
-        Currently Bloomberg Identifiers, ISINs and SEDOLs are supported.
+        Currently Bloomberg Identifiers, ISINs, FIGIs, and SEDOLs are supported.
         Valid Format Examples:
             > BBEG LN Equity
             > JRUD GR Equity
@@ -430,7 +430,7 @@ def BDIT(tickers, events, sd=None, ed=None, cond_codes=False, qrm=False, #{{{
     ----------
     tickers: one ticker or a list of tickers
         tickers should be specified in the same format as the excel API.
-        Currently Bloomberg Identifiers, ISINs and SEDOLs are supported.
+        Currently Bloomberg Identifiers, ISINs, FIGIs, and SEDOLs are supported.
         Valid Format Examples:
             > BBEG LN Equity
             > JRUD GR Equity
@@ -455,27 +455,45 @@ def BDIT(tickers, events, sd=None, ed=None, cond_codes=False, qrm=False, #{{{
         - BEST_BID
         - BEST_ASK
 
-    - start date and end date but no time
-    sd: YYYYmmdd
+    sd: YYYYmmdd HH:MM:SS
         the date to begin the historical request specified as a string in YYYYmmdd format
         examples:
         sd='20200101'
         sd='19991231'
 
-    ed: YYYYmmdd
+    ed: YYYYmmdd HH:MM:SS
         the date to begin the historical request specified as a string in YYYYmmdd format
         examples:
         ed='20200101'
         ed='19991231'
 
+    cond_codes: bool
+        display the condition codes column for each quote/trade
+
+    qrm: bool
+        import additional trades that only show in QRM
+
+    action_codes: bool
+        display the action codes column
+
+    broker_codes: bool
+        display the broker codes column
+
+    indicator_codes: bool
+        display indicator codes column
+
+    trade_time: bool
+        display the time of a trade. This can differ from the time the trade was printed
+        to the ticker in the case of delayed reporting
+
+
     Examples
     --------
 
     # Intial setup for our examples
-    >>> from pdblpi import BDH
+    >>> from pdblpi import BDIT
     >>> import pandas as pd
-    >>> # define a list of tickers
-    >>> tickers = ['JPST LN Equity', 'JREG LN Equity', 'JE13 LN Equity', 'IE00BJK9H753 ISIN']
+    >>> BDIT('JPST LN Equity', ['BEST_BID', 'BEST_ASK'], '20220125 10:00:00', '20220125 12:00:00')
     """
     return _BDIT(tickers, events, sd, ed, cond_codes, qrm, action_codes, exch_codes, broker_codes,
             indicator_codes, trade_time)
@@ -520,7 +538,8 @@ def BCDE(df):# {{{
     ----------
     df: pd.DataFrame
         The Dataframe must have the following columns:
-        - `ticker`: the bloomberg identifier for the upload
+        - `ticker`: the bloomberg identifier for the upload. it is reccomended to use ID_BB_GLOBAL + "FIGI"
+            for this identifier. Bloomberg sometimes has issues with other identifiers such as Ticker
         - `date`: the as of date for the field update. Must be a datetime rather than string
         - one column with the correct values for each field you wish to upload for
     Return
@@ -535,8 +554,18 @@ def HDS(tickers):# {{{
 
     Parameters
     ----------
-    tickers: str or list
-        Valid bloomberg identifiers to request HDS information from
+    tickers: one ticker or a list of tickers
+        tickers should be specified in the same format as the excel API.
+        Currently Bloomberg Identifiers, ISINs, FIGIs, and SEDOLs are supported.
+        Valid Format Examples:
+            > BBEG LN Equity
+            > JRUD GR Equity
+            > IE00BYVZV757 ISIN
+            > IE00BYVZV757@BVAL ISIN
+            > IE00BYVZV757 LN ISIN
+            > 2046251 SEDOL
+            > 2046251@BGN SEDOL
+            > 2046251 US SEDOL
 
     Returns
     -------
@@ -657,7 +686,40 @@ def EPRX(tickers, subset=None, decomp=False):# {{{
     """
     return _EPRX(tickers, subset, decomp)# }}}
 
-def BBAT(tickers, sd, ed=None, inav=True, fair_value=None, qrm=True, summary=False):# {{{
-    """
+def BBAT(tickers, sd, ed=None, inav=True, fair_value=None, summary=False):# {{{
+    """Bloomberg Bid, Ask, Trade data (BBAT)
+    This will take intraday bids, asks, and trades and pivot them into a nice timeseries.
+    In addition, lots of common statistics are calculated and trading periods can be filtered out
+
+    Parameters
+    ----------
+    tickers: one ticker or a list of tickers
+        tickers should be specified in the same format as the excel API.
+        Currently Bloomberg Identifiers, ISINs, FIGIs, and SEDOLs are supported.
+        Valid Format Examples:
+            > BBEG LN Equity
+            > JRUD GR Equity
+            > IE00BYVZV757 ISIN
+            > IE00BYVZV757@BVAL ISIN
+            > IE00BYVZV757 LN ISIN
+            > 2046251 SEDOL
+            > 2046251@BGN SEDOL
+            > 2046251 US SEDOL
+        examples:
+        tickers='JPST LN Equity'
+        tickers=['JPST LN Equity', '2046251 US SEDOL']
+
+    sd: YYYYmmdd
+        the date to begin the historical request specified as a string in YYYYmmdd format
+        examples:
+        start_date='20200101'
+        start_date='19991231'
+
+    sd: YYYYmmdd
+        the date to begin the historical request specified as a string in YYYYmmdd format
+        examples:
+        end_date='20200101'
+        end_date='19991231'
+
     """
     return _BBAT(tickers=tickers, sd=sd, ed=ed, inav=inav, fair_value=fair_value, qrm=qrm, summary=summary)# }}}

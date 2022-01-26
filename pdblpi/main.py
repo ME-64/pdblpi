@@ -535,6 +535,7 @@ class BCon(object):
                 corrId = []
             d = msg['element']['ReferenceDataResponse']
             for security_data_dict in d:
+                # here we get string indices must be integers when we hit daily data
                 secData = security_data_dict['securityData']
                 ticker = secData['security']
                 if 'securityError' in secData:
@@ -1368,32 +1369,38 @@ def _BDP(tickers, field, **field_ovrds):# {{{
     # return inp_df['value'].tolist()
     # return data['value'].tolist()# }}}
 
+def _conv_param_to_list(param):# {{{
+
+    if isinstance(param, str):
+        param = [param]
+
+    elif isinstance(param, pd.Series):
+        param = param.tolist()
+
+    elif isinstance(param, bool):
+        param = [param]
+
+    elif not param:
+        return None
+
+    return param# }}}
+
 def _BDH(tickers, field, start_date, end_date, cdr=None, fx=None, fill='B', # {{{
         usedpdf=True, period='D', **field_ovrds):
 
+    # import pdb; pdb.set_trace()
+
+    # unlike other params, if tickers is a series, we keep it
     if isinstance(tickers, str):
         tickers = [tickers]
 
-    if isinstance(start_date, str):
-        start_date = [start_date]
-
-    if isinstance(end_date, str):
-        end_date = [end_date]
-
-    if isinstance(cdr, str):
-        cdr = [cdr]
-
-    if isinstance(fill, str):
-        fill = [fill]
-
-    if isinstance(fx, str):
-        fx = [fx]
-
-    if isinstance(usedpdf, bool):
-        usedpdf = [usedpdf]
-
-    if isinstance(period, str):
-        period = [period]
+    start_date = _conv_param_to_list(start_date)
+    end_date = _conv_param_to_list(end_date)
+    cdr = _conv_param_to_list(cdr)
+    fill = _conv_param_to_list(fill)
+    fx = _conv_param_to_list(fx)
+    usedpdf = _conv_param_to_list(usedpdf)
+    period = _conv_param_to_list(period)
 
     trans_tickers = _parse_tickers(tickers)
 
@@ -1461,7 +1468,9 @@ def _BDH(tickers, field, start_date, end_date, cdr=None, fx=None, fill='B', # {{
 
     #import pdb; pdb.set_trace()
     for k, v in field_ovrds.items():
-        if (not isinstance(v, collections.abc.Sequence) and not isinstance(v, pd.Series)) or isinstance(v, str):
+        if isinstance(v, collections.abc.Sequence) and len(v) == 1:
+            ovrds2[k] = v * numb_tickers
+        elif (not isinstance(v, collections.abc.Sequence) and not isinstance(v, pd.Series)) or isinstance(v, str):
             ovrds2[k] = [v] * numb_tickers
         else:
             if len(v) != numb_tickers:
@@ -1479,11 +1488,14 @@ def _BDH(tickers, field, start_date, end_date, cdr=None, fx=None, fill='B', # {{
     elms_names = list(elms_dict.keys())
     all_names = ovrd_names + elms_names
 
-    params_df = params_df.groupby(all_names)['trans_ticker'].agg('unique').reset_index()
+    cols = params_df.columns.tolist()
+    cols.remove('trans_ticker')
+    params_df = params_df.groupby(cols)['trans_ticker'].agg('unique').reset_index()
 
     con = BCon(timeout=50000)
     con.start()
     all_data = pd.DataFrame()
+
     for row in params_df.to_dict(orient='records'):
         kwargs = []
         final_ovrds = []
@@ -1496,8 +1508,6 @@ def _BDH(tickers, field, start_date, end_date, cdr=None, fx=None, fill='B', # {{
             elif col in ovrd_names:
                 final_ovrds.append((col, row[col]))
 
-        # print(final_elms)
-        # print(final_ovrds)
         data = con.bdh(list(row['trans_ticker']), start_date=row['start_date'],
                 end_date=row['end_date'], flds=field, elms=final_elms, ovrds=final_ovrds,
                 longdata=True)
@@ -1546,8 +1556,9 @@ def _BDH(tickers, field, start_date, end_date, cdr=None, fx=None, fill='B', # {{
         else:
             output = output.set_index(output['index'])
 
-    output = output[['orig_ticker', 'date', 'value']]
-    output = output.rename(columns={'orig_ticker': 'ticker', 'value': field})
+    if not list(start_date) == list(end_date):
+        output = output[['orig_ticker', 'date', 'value']]
+        output = output.rename(columns={'orig_ticker': 'ticker', 'value': field})
 
 
     return output# }}}
@@ -1715,7 +1726,7 @@ def _SECF(queries, filt=None, max_results=10):# {{{
 
     return data# }}}
 
-def _BBAT(tickers, sd, ed=None, inav=True, fair_value=None, qrm=True, summary=False):# {{{
+def _BBAT(tickers, sd, ed=None, inav=True, fair_value=None, summary=False):# {{{
 
     if isinstance(tickers, str):
         tickers = [tickers]
@@ -2028,7 +2039,7 @@ def _parse_tickers(tickers):# {{{
 
     return new_tick# }}}
 
-def _bbat(ticker, date=None, inav=True, fair_value=None, qrm=True, summary=False):# {{{
+def _bbat(ticker, date=None, inav=True, fair_value=None, summary=False):# {{{
     """
     unvectorised version of the function
     Bloomberg Bid, Ask Trade data. This pivots intraday bid, ask and spread
@@ -2059,7 +2070,7 @@ def _bbat(ticker, date=None, inav=True, fair_value=None, qrm=True, summary=False
 
     events = ['BEST_BID', 'BEST_ASK', 'TRADE']
     try:
-        data = _BDIT(ticker, events=events, sd=start_date, ed=end_date, cond_codes=True, exch_codes=False, qrm=qrm)
+        data = _BDIT(ticker, events=events, sd=start_date, ed=end_date, cond_codes=True, exch_codes=False, qrm=True)
     except Exception as e:
         print(e)
         return None

@@ -11,7 +11,7 @@ def create_excel_app(path=r"C:\Program Files (x86)\BLP\API\Office Tools\Bloomber
     sh = bk.sheets['Sheet1']
     return sh# }}}
 
-def run_bql(sh, universe=None, expression=None, local_variables=None, query=None, timeout=15,# {{{
+def run_bql(sh, universe=None, expression=None, local_variables=None, query=None, timeout=30,# {{{
         show_dates=None, show_headers=None, show_query=None, show_ids=None, transpose=None,
         sort_dates_desc=None, group_by_fields=None, show_all_cols=None):
 

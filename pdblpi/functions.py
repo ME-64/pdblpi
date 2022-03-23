@@ -599,7 +599,7 @@ def MEMB(tickers, all_cols=False, reweight=False, add_cash=False, valid_reweight
     """
     return _MEMB(tickers, all_cols, reweight, add_cash, valid_reweight)# }}}
 
-def EPRX(tickers, subset=None, decomp=False):# {{{
+def EPRX(tickers=None, subset=None, decomp=False):# {{{
 
     """
     Parameters
@@ -722,4 +722,4 @@ def BBAT(tickers, sd, ed=None, inav=True, fair_value=None, summary=False):# {{{
         end_date='19991231'
 
     """
-    return _BBAT(tickers=tickers, sd=sd, ed=ed, inav=inav, fair_value=fair_value, qrm=qrm, summary=summary)# }}}
+    return _BBAT(tickers=tickers, sd=sd, ed=ed, inav=inav, fair_value=fair_value, summary=summary)# }}}

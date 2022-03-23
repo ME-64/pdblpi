@@ -1125,174 +1125,6 @@ def custom_req(session, request):# {{{
 
 
 
-# ----- depreciated interface
-# extending pandas dataframe to make methods easily accessible{{{
-@pd.api.extensions.register_series_accessor('bbg')
-class BBG:
-    def __init__(self, pandas_obj):
-        self._obj = pandas_obj
-
-    def bdp(self, fields, ovrds=None):# {{{
-
-        con = BCon(timeout=50000)
-        con.start()
-
-        # getting a df from the column
-
-        df = self._obj.to_frame(name='ticker')
-
-        data = con.ref(df['ticker'].to_list(), flds=fields, ovrds=ovrds) \
-            .drop_duplicates() \
-            .pivot(index='ticker', columns='field', values='value') \
-            .reset_index()
-
-
-        df = df.merge(data, how='left', left_on='ticker', right_on='ticker')
-        con.stop()
-        return df[[fields]]# }}}
-
-    def bdi(self, field, agg_func, start_date, end_date, ovrds=[], fillna=0):# {{{
-
-        con = BCon(timeout=50000)
-        con.start()
-
-        df = self._obj.to_frame(name='ticker')
-
-        all_ovrds = [
-            ('MARKET_DATA_OVERRIDE', field),
-            ('START_DATE_OVERRIDE', pd.to_datetime(start_date).strftime('%Y%m%d')),
-            ('END_DATE_OVERRIDE', pd.to_datetime(end_date).strftime('%Y%m%d'))
-        ] + ovrds
-
-        x = con.ref(df['ticker'].to_list(), 'INTERVAL_' + agg_func.upper(), ovrds=all_ovrds) \
-        .drop_duplicates() \
-        .pivot(index='ticker', columns='field', values='value') \
-        .reset_index()
-
-        x = x.rename(columns={'INTERVAL_' + agg_func.upper(): field})
-        x[field] = x[field].fillna(fillna)
-
-        df = df.merge(x, how='left', left_on='ticker', right_on='ticker')
-
-
-        con.stop()
-
-        return df[[field]]# }}}
-
-def _find_bbg_excel(pid=None):# {{{
-    """function to try determine which excel instance has a fully working bloomberg"""
-
-    if pid:
-        return pid
-
-    if len(xw.apps) == 0:
-        raise Exception("You need a running instance of excel with the bbg add-in loaded and working")
-
-    app_pid = _test_bbg_addin(xw.apps)
-
-    if not app_pid:
-        raise Exception("You need a running instance of excel with the bbg add-in loaded and working")
-
-    return app_pid# }}}
-
-def _test_bbg_addin(apps):# {{{
-    """function to test the bloomberg add-in with a basic formula"""
-    for app in apps:
-        bk = app.books.add()
-        sh = bk.sheets[0]
-        txt = '=BDP("JPST LN Equity", "FUND_ASSET_CLASS_FOCUS")'
-        sh.range('a1').value = txt
-        time.sleep(1)
-        val = sh.range('a1').value
-        bk.close()
-        if val == 'Fixed Income':
-            return app.pid
-    return False# }}}
-
-def get_etf_memb(ticker):# {{{
-    # first get the running excel instance
-
-    global __glob_pid
-    pid = _find_bbg_excel(__glob_pid)
-
-    try:
-        app = xw.apps[pid]
-        __glob_pid = pid
-
-    except:
-
-        try:
-            pid = _find_bbg_excel(None)
-            app = xw.apps[pid]
-            __glob_pid = pid
-        except:
-            raise Exception(r"Excel Instance with PID {pid} has been closed")
-
-        raise Exception(r"Excel Instance with PID {pid} has been closed")
-
-
-    bk = app.books.add()
-    sh = bk.sheets[0]
-    txt = f'''=BQL("members('{ticker}', type=HOLDINGS)","ID().WEIGHTS, ID_ISIN()")'''
-    sh.range('A1').value = txt
-    i = sh.cells(1,1)
-    for h in range(10):
-        if sh.range('A1').value == '#N/A Requesting Data...':
-            time.sleep(0.5)
-    i = sh.range('a1').expand('right').expand('down')
-    hds = i.options(pd.DataFrame).value
-    hds = hds.reset_index()
-    hds.columns = ['bbg_ticker', 'weight', 'isin']
-    hds['weight'] = hds['weight'] / 100
-    bk.close()
-    return hds# }}}
-
-# ticker = 'JPST LN Equity'{{{
-
-# app = xw.apps[33196]
-# for app in xw.apps:
-#     for addin in list(app.api.COMAddIns):
-#         print(f'''APP: {app.pid} addin: {addin.Description} ({addin.ProgId}) ''')
-# 
-# for app in xw.apps:
-#     for addin in list(app.api.AddIns):
-#         print(f'''APP: {app.pid} addin: {addin.Name} ({addin.IsOpen}) ''')
-# 
-# 
-# addin = r"C:\Program Files (x86)\BLP\API\Office Tools\BloombergUI.xla"
-# comm =  r"C:\Program Files (x86)\BLP\API\Office tools\bofaddin.dll"
-# app = xw.App(visible=True)
-# 
-# # app.api.RegisterXLL(addin)
-# a = app.api.AddIns.Add(addin)
-# c = app.api.AddIns.Add(comm)
-# 
-# a.Installed = True
-# c.Installed = True
-# 
-# ticker = 'JPST LN Equity'
-# 
-# bk = app.books.add()
-# sh = bk.sheets[0]
-# txt = f'''=BQL("members('{ticker}', type=HOLDINGS)","ID().WEIGHTS, ID_ISIN()")'''
-# sh.range('A1').value = txt
-# i = sh.cells(1,1)
-# i = sh.range('a1').expand('right').expand('down')
-# hds = i.options(pd.DataFrame).value
-# 
-#     found = False
-#     for app in xw.apps:
-#         for addin in list(app.api.AddIns):
-#             if (addin.Name == 'BloombergUI.xla') and (addin.IsOpen):
-#                 found = app.pid
-#                 break
-#         if found:
-#             break
-#     if not found:
-#         raise Exception('No running excel instance with excel addin found')}}}}}}
-# ----- depreciated interface
-
-
 def _BDP(tickers, field, **field_ovrds):# {{{
 
     if isinstance(tickers, str):
@@ -1306,11 +1138,23 @@ def _BDP(tickers, field, **field_ovrds):# {{{
 
     # this is the easiest way to deal with situations where we don't give overrides
     field_ovrds['dummy'] = 'dummy'
+    field_ovrds['field_name'] = field
+
+    # special case where field can never be blank
+    if not isinstance(field, str):
+        for x in field:
+            assert not pd.isna(x)
 
     #import pdb; pdb.set_trace()
     for k, v in field_ovrds.items():
-        if (not isinstance(v, collections.abc.Sequence) and not isinstance(v, pd.Series)) or isinstance(v, str):
+        if isinstance(v, collections.abc.Sequence) and len(v) == 1:
+            ovrds2[k] = list(v) * numb_tickers
+        elif (not isinstance(v, collections.abc.Sequence) and not isinstance(v, pd.Series)) or isinstance(v, str):
             ovrds2[k] = [v] * numb_tickers
+        elif isinstance(v, pd.Series):
+            if len(v) != numb_tickers:
+                raise ValueError(f"Invalid number of overrides specified for {k}")
+            ovrds2[k] = list(v)
         else:
             if len(v) != numb_tickers:
                 raise ValueError(f"Invalid number of overrides specified for {k}")
@@ -1321,8 +1165,10 @@ def _BDP(tickers, field, **field_ovrds):# {{{
         params_df[k] = v
 
     ovrd_names = list(ovrds2.keys())
+    cols = params_df.columns.tolist()
+    cols.remove('trans_ticker')
 
-    params_df = params_df.groupby(ovrd_names)['trans_ticker'].agg('unique').reset_index()
+    params_df = params_df.groupby(cols)['trans_ticker'].agg('unique').reset_index()
 
     con = BCon(timeout=50000)
     con.start()
@@ -1330,9 +1176,9 @@ def _BDP(tickers, field, **field_ovrds):# {{{
     for row in params_df.to_dict(orient='records'):
         kwargs = []
         for col in ovrd_names:
-            if col != 'dummy':
+            if col != 'dummy' and col != 'field_name':
                 kwargs.append((col, row[col]))
-        data = con.ref(list(row['trans_ticker']), field, kwargs)
+        data = con.ref(list(row['trans_ticker']), row['field_name'], kwargs)
         for col in ovrd_names:
             data[col] = row[col]
         all_data = all_data.append(data, ignore_index=True)
@@ -1743,7 +1589,7 @@ def _BBAT(tickers, sd, ed=None, inav=True, fair_value=None, summary=False):# {{{
     df = pd.DataFrame()
     for ticker in tickers:
         for date in dates:
-            tmp = _bbat(ticker=ticker, date=date, inav=inav, fair_value=fair_value, qrm=qrm, summary=summary)
+            tmp = _bbat(ticker=ticker, date=date, inav=inav, fair_value=fair_value, summary=summary)
             if isinstance(tmp, pd.DataFrame):
                 df = df.append(tmp, ignore_index=True)
 
@@ -1821,13 +1667,14 @@ def _MEMB(tickers, all_cols=False, reweight=False, add_cash=False, valid_reweigh
     univ = "members('{ticker}', {opt})"
 
     for etf in etfs:
-        univ = f"members('{etf}', type=HOLDINGS)"
+        univ = f"filter(holdings('{etf}'), id().WEIGHTS>0)"
         expression = "id"
         tmp = _BQL(univ, expression, show_headers=True, show_all_cols=True)
         if not isinstance(tmp, pd.DataFrame):
             raise Exception(f'dataframe not returned. Message received was: {tmp}')
-        if 'id.ORIG_IDS' not in tmp.columns.tolist():
-            raise Exception(f'dataframe not returned. Message received was: {tmp}')
+        # keeping this out for now
+        # if 'id.ORIG_IDS' not in tmp.columns.tolist():
+        #     raise Exception(f'dataframe not returned. Message received was: {tmp}')
         df = df.append(tmp, ignore_index=True, sort=True)
 
     if indexes:
@@ -1904,11 +1751,13 @@ def _MEMB(tickers, all_cols=False, reweight=False, add_cash=False, valid_reweigh
 
     return df# }}}
 
-@lru_cache(maxsize=1000)
-def _EPRX(tickers, subset=None, decomp=False):# {{{
+# @lru_cache(maxsize=1000)
+def _EPRX(tickers=None, subset=None, decomp=False):# {{{
 
     exch = re.compile(r" [A-Za-z0-9]{2} ")
     data = load_exchange_data()
+    if not tickers:
+        return data
 
     comps = ['GR', 'RM', 'BZ', 'UZ', 'SW', 'EY', 'AR',
             'CB', 'VC', 'ED', 'MM', 'US', 'CI', 'CN',
@@ -1988,7 +1837,11 @@ def _EPRX(tickers, subset=None, decomp=False):# {{{
 def load_exchange_data(cache=True):# {{{
     path = Path(__file__).parent.absolute() / 'exchanges.xlsx'
     df = pd.read_excel(path, sheet_name='exchange_data',
-            converters={'equity_market_open': str, 'equity_market_close': str})
+            converters={'equity_market_open': str, 'equity_market_close': str, 'bbg_exch_code': str},
+            na_values=['nan', ''])
+
+    # amsterdam exchange code is being parsed as NAN rather than 'NA'
+    df.loc[df['exchange_name']=='Euronext Amsterdam', 'bbg_exch_code'] = 'NA'
 
     return df# }}}
 
@@ -2004,7 +1857,7 @@ def _parse_tickers(tickers):# {{{
     sedol = re.compile(r"^[A-Z0-9]{7}(?:@|\s)")
 
     for ticker in tickers:
-        if isin.match(ticker) and 'FIGI' not in ticker:
+        if isin.match(ticker) and 'FIGI' not in ticker.upper():
             # i = isin.match(ticker)[0][:-1]
             i = ticker.split()[0]
             # i = [str(x) for x in i] # not sure if this is needed now
@@ -2015,7 +1868,7 @@ def _parse_tickers(tickers):# {{{
                 e = ''
             new_tick.append(f'/isin/{i}{e}')
 
-        elif ' SEDOL' in ticker:
+        elif ' SEDOL' in ticker.upper():
             # s = sedol.match(ticker)[0][:-1]
             s = ticker.split()[0]
             # s = [str(x) for x in s]
@@ -2025,7 +1878,7 @@ def _parse_tickers(tickers):# {{{
             else:
                 e = ''
             new_tick.append(f'/sedol/{s}{e}')
-        elif ' FIGI' in ticker:
+        elif ' FIGI' in ticker.upper():
             s = ticker.split()[0]
             e = exch.findall(ticker)
             if e:
@@ -2033,6 +1886,14 @@ def _parse_tickers(tickers):# {{{
             else:
                 e = ''
             new_tick.append(f'/bbgid/{s}/{e}')
+        elif ' CUSIP' in ticker.upper():
+            s = ticker.split()[0]
+            e = exch.findall(ticker)
+            if e:
+                e = ' ' + e[0].strip()
+            else:
+                e = ''
+            new_tick.append(f'/cusip/{s}/{e}')
         else:
             new_tick.append(ticker)
 

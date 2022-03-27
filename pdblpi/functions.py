@@ -2,20 +2,28 @@ from .main import _BDP, _BDH, _BDS, _BEQS, _SECF, _BCDE, _HDS, _BQL, _MEMB, _EPR
 
 
 def BDP(tickers, field, **field_ovrds):# {{{
-    """
+    """Bloomberg Data Point
+
     Parameters
     ----------
-    tickers: one ticker or a list of tickers
-        tickers should be specified in the same format as the excel API.
+    tickers: one ticker or a list of tickers tickers should be specified in the same format as the excel API.
         Currently Bloomberg Identifiers, ISINs, FIGIs, and SEDOLs are supported.
         Valid Format Examples:
+
             > BBEG LN Equity
+
             > JRUD GR Equity
+
             > IE00BYVZV757 ISIN
+
             > IE00BYVZV757@BVAL ISIN
+
             > IE00BYVZV757 LN ISIN
+
             > 2046251 SEDOL
+
             > 2046251@BGN SEDOL
+
             > 2046251 US SEDOL
 
     field: string
@@ -47,21 +55,24 @@ def BDP(tickers, field, **field_ovrds):# {{{
     Examples
     --------
 
-    # Intial setup for our examples
+    Intial setup for our examples
+
     >>> from pdblpi import BDP
     >>> import pandas as pd
     >>> # define a list of tickers
     >>> tickers = ['JPST LN Equity', 'JREG LN Equity', 'MBILX IX Equity', 'IE00BJK9H753 ISIN']
 
 
-    # BASIC USAGE - No overrides
+    BASIC USAGE - No overrides
+
         here we are simply getting the Fund NAV for our 4 securities
         that we defined above
     >>> data = BDP(tickers, 'FUND_NET_ASSET_VAL')
     >>> print(data)
     [101.07, 35.038, 2099.168, 36.078]
 
-    # INTERMEDIATE USAGE - Overriding a field
+    INTERMEDIATE USAGE - Overriding a field
+
         here we are getting the Fund NAV again, but we
         are changing the Fund NAV with the "NAV_CRNCY" override
     >>> data = BDP(tickers, 'FUND_NET_ASSET_VAL', nav_crncy='USD')
@@ -69,7 +80,8 @@ def BDP(tickers, field, **field_ovrds):# {{{
     [101.07, 35.038, 102.694, 36.078]
 
 
-    # ADVANCED USAGE - Using a different override for each ticker
+    ADVANCED USAGE - Using a different override for each ticker
+
         Again we want to get the FUND NAV, and we are also overriding
         it with "NAV_CRNCY". But rather than return every NAV in USD
         we want to use a different currency for each of our 4 tickers
@@ -79,7 +91,8 @@ def BDP(tickers, field, **field_ovrds):# {{{
     [2065.921, 3876.955, 798.3883, 236.4137]
 
 
-    # ADVANCED USAGE - Specifiying Multiple Overrides
+    ADVANCED USAGE - Specifiying Multiple Overrides
+
         here we want to find the return from November 2020 to January 2021
         we are going to use bloomberg's "CUST_TRR_RETURN_HOLDING_PER" field
         to do this. Look in FLDS<GO> - it has lot's of overrides!
@@ -92,7 +105,8 @@ def BDP(tickers, field, **field_ovrds):# {{{
     [0.2933577, 15.90333, 5.385714, 14.91376]
 
 
-    # ADVANCED USAGE - Specifying Multiple Overrides with different values per ticker
+    ADVANCED USAGE - Specifying Multiple Overrides with different values per ticker
+
         We are going to build on the example above, except rather
         than use USD as the price for every ticker, we want some returns
         in EUR terms and others in USD terms. We will also use gross dividends
@@ -110,7 +124,8 @@ def BDP(tickers, field, **field_ovrds):# {{{
 
 
 
-    # ALTERNATIVE USAGE - Using Pandas DataFrames
+    ALTERNATIVE USAGE - Using Pandas DataFrames
+
         In previous examples we were using lists to define our tickers
         and overrides. However, more commonly we would have a dataframe
         that we want to add additional columns to.
@@ -159,17 +174,29 @@ def BDH(tickers, field, start_date, end_date, cdr=None, fx=None, fill='B',# {{{
     tickers: one ticker or a list of tickers
         tickers should be specified in the same format as the excel API.
         Currently Bloomberg Identifiers, ISINs, FIGIs, and SEDOLs are supported.
+
         Valid Format Examples:
+
             > BBEG LN Equity
+
             > JRUD GR Equity
+
             > IE00BYVZV757 ISIN
+
             > IE00BYVZV757@BVAL ISIN
+
             > IE00BYVZV757 LN ISIN
+
             > 2046251 SEDOL
+
             > 2046251@BGN SEDOL
+
             > 2046251 US SEDOL
+
         examples:
+
         tickers='JPST LN Equity'
+
         tickers=['JPST LN Equity', '2046251 US SEDOL']
 
     field: string
@@ -221,8 +248,7 @@ def BDH(tickers, field, start_date, end_date, cdr=None, fx=None, fill='B',# {{{
         fill='B'
         fill='P'
 
-
-    usedpdf: boolean (True/False)
+    usedpdf: boolean (True|False)
         This determines whether the historical pricing will follow user settings in DPDF<GO>
         For example if the user has set NAVs to be historically adjusted for dividends, 
         setting usedpdf=True will respect this. With usedpdf=False - the historical NAVs
@@ -230,7 +256,6 @@ def BDH(tickers, field, start_date, end_date, cdr=None, fx=None, fill='B',# {{{
         examples:
         usedpdf=True
         usedpdf=False
-
 
     period: string ('D' or 'W' or 'M' or 'S' or 'Q' or 'A')
         The periodicity to return dates for (default = 'D')
@@ -260,14 +285,16 @@ def BDH(tickers, field, start_date, end_date, cdr=None, fx=None, fill='B',# {{{
     Examples
     --------
 
-    # Intial setup for our examples
+    Intial setup for our examples
+
     >>> from pdblpi import BDH
     >>> import pandas as pd
     >>> # define a list of tickers
     >>> tickers = ['JPST LN Equity', 'JREG LN Equity', 'JE13 LN Equity', 'IE00BJK9H753 ISIN']
 
 
-    # BASIC USAGE - Simple query
+    BASIC USAGE - Simple query
+
         We will start by demonstrating the difference between BDH when a date range is given
         (i.e. there are multiple days between 'start_date' and 'end_date').
         We will start by showing the difference between what BDH returns when you query with
@@ -414,6 +441,7 @@ def BEQS(eqs_screen_name, as_of_date=None):# {{{
 
     Examples
     --------
+
     Assume the user has a screen called "Europe ETFs"
 
     >>> from pdblpi import BEQS
@@ -490,7 +518,8 @@ def BDIT(tickers, events, sd=None, ed=None, cond_codes=False, qrm=False, #{{{
     Examples
     --------
 
-    # Intial setup for our examples
+    Intial setup for our examples
+
     >>> from pdblpi import BDIT
     >>> import pandas as pd
     >>> BDIT('JPST LN Equity', ['BEST_BID', 'BEST_ASK'], '20220125 10:00:00', '20220125 12:00:00')

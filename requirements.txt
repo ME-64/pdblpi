@@ -1,0 +1,11 @@
+pandas
+requests
+pytz
+xlwings
+pyparsing
+sphinx
+sphinx-rtd-theme
+pytest
+pylint
+--extra-index-url=https://bcms.bloomberg.com/pip/simple
+blpapi

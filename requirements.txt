@@ -7,5 +7,7 @@ sphinx
 sphinx-rtd-theme
 pytest
 pylint
+wheel
 --extra-index-url=https://bcms.bloomberg.com/pip/simple
 blpapi
+

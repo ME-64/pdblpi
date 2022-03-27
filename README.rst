@@ -7,4 +7,4 @@ and an intuitive excel-like interface.
 This library expands greatly expands on work done by the `pdblp` python package
 that is now depreciated.
 
-Full documentation can be found at `https://me-64.github.io/pdlbpi`
+Full documentation can be found at `https://me-64.github.io/pdblpi`

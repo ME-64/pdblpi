@@ -15,13 +15,13 @@ setup(
   # long_description = README,
   #long_description_content_type = 'text/markdown',
   author = 'Milo Elliott',
-  author_email = 'milo.elliott@jpmorgan.com',
+  author_email = 'milo_elliott@icloud.com',
   # url = 'https://github.com/ME-64/pyfixerio',
   keywords = ['API wrapper', 'bbg', 'bloomberg'],
   # include_package_data = True,
-  # install_requires=[           
-  #         'requests',
-  #     ],
+   install_requires=[
+           'pandas', 'pytz', 'blpapi', 'xlwings', 'pyparsing'
+       ],
   classifiers=[
     'Development Status :: 3 - Alpha',      
     'Intended Audience :: Developers',     

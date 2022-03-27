@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pdblpi &mdash; pdblpi BETA documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="#" class="icon icon-home"> pdblpi
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">pdblpi</a></li>
+<li><a class="reference internal" href="#api-documentation">API Documentation</a></li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">pdblpi</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
+      <li>pdblpi</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="pdblpi">
+<h1>pdblpi<a class="headerlink" href="#pdblpi" title="Permalink to this headline"></a></h1>
+<p>A wrapper around bloombergs desktop / server API leveraging pandas DataFrames
+and an intuitive excel-like interface.</p>
+<p>This library expands greatly expands on work done by the <cite>pdblp</cite> python package
+that is now depreciated.</p>
+<p>Full documentation can be found at <cite>https://me-64.github.io/pdblpi</cite></p>
+</section>
+<section id="api-documentation">
+<h1>API Documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="pdblpi.BDP">
+<span class="sig-prename descclassname"><span class="pre">pdblpi.</span></span><span class="sig-name descname"><span class="pre">BDP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tickers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">field_ovrds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pdblpi.BDP" title="Permalink to this definition"></a></dt>
+<dd><p>Bloomberg Data Point</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tickers</strong> (<em>one ticker</em><em> or </em><em>a list of tickers tickers should be specified in the same format as the excel API.</em>) – <p>Currently Bloomberg Identifiers, ISINs, FIGIs, and SEDOLs are supported.
+Valid Format Examples:</p>
+<blockquote>
+<div><p>&gt; BBEG LN Equity</p>
+<p>&gt; JRUD GR Equity</p>
+<p>&gt; IE00BYVZV757 ISIN</p>
+<p>&gt; <a class="reference external" href="mailto:IE00BYVZV757&#37;&#52;&#48;BVAL">IE00BYVZV757<span>&#64;</span>BVAL</a> ISIN</p>
+<p>&gt; IE00BYVZV757 LN ISIN</p>
+<p>&gt; 2046251 SEDOL</p>
+<p>&gt; <a class="reference external" href="mailto:2046251&#37;&#52;&#48;BGN">2046251<span>&#64;</span>BGN</a> SEDOL</p>
+<p>&gt; 2046251 US SEDOL</p>
+</div></blockquote>
+</p></li>
+<li><p><strong>field</strong> (<em>string</em>) – The bloomberg field mnemonic for the datapoint you wish to use.
+Use FLDS&lt;GO&gt; on the terminal to find valid bloomberg fields.
+Only one field can be specified per query</p></li>
+<li><p><strong>field_ovrds</strong> (<em>string</em><em> or </em><em>list</em>) – <ul>
+<li><p>There can be multiple field overides in a query</p></li>
+<li><p>Any one of the valid overrides for the given fields</p></li>
+<li><p>To find valid field overrides, use FLDS&lt;GO&gt;, select your field and
+look at the bottom table.</p></li>
+<li><p>For example: “PX_LAST” has the optional overrides “TIME_ZONE_OVERRIDE”
+and “DIVIDEND_ADJ_LAST_PX_OVERRIDE”</p></li>
+<li><p>to use this in a query you would say time_zone_override=12</p></li>
+<li><p>If you want to use a different override value for each ticker in the query
+you will need to supply a list instead of one value. See examples below.</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p><strong>data</strong> –</p>
+<ul class="simple">
+<li><p>A list of the datapoints is returned. 1 datapoint is returned per security queried.</p></li>
+<li><p>If one of the tickers you input is not valid the value for that ticker will be
+“security not found”</p></li>
+<li><p>If there is no data for the field you specified - the list will contain a None value</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Intial setup for our examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pdblpi</span> <span class="kn">import</span> <span class="n">BDP</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># define a list of tickers</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tickers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;JPST LN Equity&#39;</span><span class="p">,</span> <span class="s1">&#39;JREG LN Equity&#39;</span><span class="p">,</span> <span class="s1">&#39;MBILX IX Equity&#39;</span><span class="p">,</span> <span class="s1">&#39;IE00BJK9H753 ISIN&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>BASIC USAGE - No overrides</p>
+<blockquote>
+<div><p>here we are simply getting the Fund NAV for our 4 securities
+that we defined above</p>
+</div></blockquote>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">BDP</span><span class="p">(</span><span class="n">tickers</span><span class="p">,</span> <span class="s1">&#39;FUND_NET_ASSET_VAL&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="go">[101.07, 35.038, 2099.168, 36.078]</span>
+</pre></div>
+</div>
+<p>INTERMEDIATE USAGE - Overriding a field</p>
+<blockquote>
+<div><p>here we are getting the Fund NAV again, but we
+are changing the Fund NAV with the “NAV_CRNCY” override</p>
+</div></blockquote>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">BDP</span><span class="p">(</span><span class="n">tickers</span><span class="p">,</span> <span class="s1">&#39;FUND_NET_ASSET_VAL&#39;</span><span class="p">,</span> <span class="n">nav_crncy</span><span class="o">=</span><span class="s1">&#39;USD&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="go">[101.07, 35.038, 102.694, 36.078]</span>
+</pre></div>
+</div>
+<p>ADVANCED USAGE - Using a different override for each ticker</p>
+<blockquote>
+<div><p>Again we want to get the FUND NAV, and we are also overriding
+it with “NAV_CRNCY”. But rather than return every NAV in USD
+we want to use a different currency for each of our 4 tickers</p>
+</div></blockquote>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">currencies</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;MXN&#39;</span><span class="p">,</span> <span class="s1">&#39;JPY&#39;</span><span class="p">,</span> <span class="s1">&#39;HKD&#39;</span><span class="p">,</span> <span class="s1">&#39;CNY&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">BDP</span><span class="p">(</span><span class="n">tickers</span><span class="p">,</span> <span class="s1">&#39;FUND_NET_ASSET_VAL&#39;</span><span class="p">,</span> <span class="n">nav_crncy</span><span class="o">=</span><span class="n">currencies</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="go">[2065.921, 3876.955, 798.3883, 236.4137]</span>
+</pre></div>
+</div>
+<p>ADVANCED USAGE - Specifiying Multiple Overrides</p>
+<blockquote>
+<div><p>here we want to find the return from November 2020 to January 2021
+we are going to use bloomberg’s “CUST_TRR_RETURN_HOLDING_PER” field
+to do this. Look in FLDS&lt;GO&gt; - it has lot’s of overrides!</p>
+</div></blockquote>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">BDP</span><span class="p">(</span><span class="n">tickers</span><span class="p">,</span> <span class="s2">&quot;CUST_TRR_RETURN_HOLDING_PER&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">cust_trr_crncy</span><span class="o">=</span><span class="s1">&#39;USD&#39;</span><span class="p">,</span>             <span class="c1"># all returns from USD investor perspective</span>
+<span class="gp">... </span>        <span class="n">cust_trr_dvd_typ</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>               <span class="c1"># Gross Dividends, not Net</span>
+<span class="gp">... </span>        <span class="n">cust_trr_start_dt</span><span class="o">=</span><span class="s1">&#39;20201101&#39;</span><span class="p">,</span>   <span class="c1"># start date, using the format specified in FLDS</span>
+<span class="gp">... </span>        <span class="n">cust_trr_end_dt</span><span class="o">=</span><span class="s1">&#39;20210131&#39;</span><span class="p">)</span>     <span class="c1"># end date, using the format specified in FLDS</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="go">[0.2933577, 15.90333, 5.385714, 14.91376]</span>
+</pre></div>
+</div>
+<p>ADVANCED USAGE - Specifying Multiple Overrides with different values per ticker</p>
+<blockquote>
+<div><p>We are going to build on the example above, except rather
+than use USD as the price for every ticker, we want some returns
+in EUR terms and others in USD terms. We will also use gross dividends
+for some tickers and net dividends for others to demonstrate using multiple overrides</p>
+</div></blockquote>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">currencies</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;USD&#39;</span><span class="p">,</span> <span class="s1">&#39;USD&#39;</span><span class="p">,</span> <span class="s1">&#39;EUR&#39;</span><span class="p">,</span> <span class="s1">&#39;EUR&#39;</span><span class="p">]</span> <span class="c1"># specifying 4 currencies for our 4 tickers</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dvd_typ</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>                    <span class="c1"># using gross dividends for some, net for others</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">BDP</span><span class="p">(</span><span class="n">tickers</span><span class="p">,</span> <span class="s2">&quot;CUST_TRR_RETURN_HOLDING_PER&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">cust_trr_crncy</span><span class="o">=</span><span class="n">currencies</span><span class="p">,</span>        <span class="c1"># passing in our list of currencies</span>
+<span class="gp">... </span>        <span class="n">cust_trr_dvd_typ</span><span class="o">=</span><span class="n">dvd_typ</span><span class="p">,</span>         <span class="c1"># passing in our list of dividend types</span>
+<span class="gp">... </span>        <span class="n">cust_trr_start_dt</span><span class="o">=</span><span class="s1">&#39;20201101&#39;</span><span class="p">,</span>     <span class="c1"># start date same as before</span>
+<span class="gp">... </span>        <span class="n">cust_trr_end_dt</span><span class="o">=</span><span class="s1">&#39;20210131&#39;</span><span class="p">)</span>       <span class="c1"># end date same as before</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="c1"># notice how returns differ from our last example</span>
+<span class="go">[0.2933577, 15.90333, 1.164031, 10.31039]</span>
+</pre></div>
+</div>
+<p>ALTERNATIVE USAGE - Using Pandas DataFrames</p>
+<blockquote>
+<div><p>In previous examples we were using lists to define our tickers
+and overrides. However, more commonly we would have a dataframe
+that we want to add additional columns to.</p>
+</div></blockquote>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tickers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;JPST LN Equity&#39;</span><span class="p">,</span> <span class="s1">&#39;JREG LN Equity&#39;</span><span class="p">,</span> <span class="s1">&#39;MBILX IX Equity&#39;</span><span class="p">,</span> <span class="s1">&#39;IE00BJK9H753 ISIN&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># converting our list to a dataframe</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;ticker&#39;</span><span class="p">:</span> <span class="n">tickers</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="go">              ticker</span>
+<span class="go">0     JPST LN Equity</span>
+<span class="go">1     JREG LN Equity</span>
+<span class="go">2    MBILX IX Equity</span>
+<span class="go">3  IE00BJK9H753 ISIN</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># now we are going to create a new column called &#39;nav&#39; which will retrieve the NAV like before</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;nav&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">BDP</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;ticker&#39;</span><span class="p">],</span> <span class="s1">&#39;FUND_NET_ASSET_VAL&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="go">              ticker       nav</span>
+<span class="go">0     JPST LN Equity   101.070</span>
+<span class="go">1     JREG LN Equity    35.038</span>
+<span class="go">2    MBILX IX Equity  2099.168</span>
+<span class="go">3  IE00BJK9H753 ISIN    36.078</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># we can also use overrides exactly like before, lets get the USD NAVs</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;usd_nav&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">BDP</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;ticker&#39;</span><span class="p">],</span> <span class="s1">&#39;FUND_NET_ASSET_VAL&#39;</span><span class="p">,</span> <span class="n">nav_crncy</span><span class="o">=</span><span class="s1">&#39;USD&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="go">              ticker       nav   usd_nav</span>
+<span class="go">0     JPST LN Equity   101.070  101.0700</span>
+<span class="go">1     JREG LN Equity    35.038   35.0380</span>
+<span class="go">2    MBILX IX Equity  2099.168  102.5936</span>
+<span class="go">3  IE00BJK9H753 ISIN    36.078   36.0780</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># finally, we can also use different overrides for each ticker by giving a list</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">currencies</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;MXN&#39;</span><span class="p">,</span> <span class="s1">&#39;JPY&#39;</span><span class="p">,</span> <span class="s1">&#39;HKD&#39;</span><span class="p">,</span> <span class="s1">&#39;CNY&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;multi_nav&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">BDP</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;ticker&#39;</span><span class="p">],</span> <span class="s1">&#39;FUND_NET_ASSET_VAL&#39;</span><span class="p">,</span> <span class="n">nav_crncy</span><span class="o">=</span><span class="n">currencies</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="go">              ticker       nav   usd_nav  multi_nav</span>
+<span class="go">0     JPST LN Equity   101.070  101.0700  2067.8920</span>
+<span class="go">1     JREG LN Equity    35.038   35.0380  3879.2320</span>
+<span class="go">2    MBILX IX Equity  2099.168  102.5936   797.6428</span>
+<span class="go">3  IE00BJK9H753 ISIN    36.078   36.0780   236.4137</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pdblpi.BDH">
+<span class="sig-prename descclassname"><span class="pre">pdblpi.</span></span><span class="sig-name descname"><span class="pre">BDH</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tickers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cdr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'B'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usedpdf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">period</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'D'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">field_ovrds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pdblpi.BDH" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tickers</strong> (<em>one ticker</em><em> or </em><em>a list of tickers</em>) – <p>tickers should be specified in the same format as the excel API.
+Currently Bloomberg Identifiers, ISINs, FIGIs, and SEDOLs are supported.</p>
+<p>Valid Format Examples:</p>
+<blockquote>
+<div><p>&gt; BBEG LN Equity</p>
+<p>&gt; JRUD GR Equity</p>
+<p>&gt; IE00BYVZV757 ISIN</p>
+<p>&gt; <a class="reference external" href="mailto:IE00BYVZV757&#37;&#52;&#48;BVAL">IE00BYVZV757<span>&#64;</span>BVAL</a> ISIN</p>
+<p>&gt; IE00BYVZV757 LN ISIN</p>
+<p>&gt; 2046251 SEDOL</p>
+<p>&gt; <a class="reference external" href="mailto:2046251&#37;&#52;&#48;BGN">2046251<span>&#64;</span>BGN</a> SEDOL</p>
+<p>&gt; 2046251 US SEDOL</p>
+</div></blockquote>
+<p>examples:</p>
+<p>tickers=’JPST LN Equity’</p>
+<p>tickers=[‘JPST LN Equity’, ‘2046251 US SEDOL’]</p>
+</p></li>
+<li><p><strong>field</strong> (<em>string</em>) – The bloomberg field mnemonic for the datapoint you wish to use.
+Use FLDS&lt;GO&gt; on the terminal to find valid bloomberg fields.
+Only one field can be specified per query
+examples:
+field=’FUND_NET_ASSET_VAL’
+field=’PX_LAST’</p></li>
+<li><p><strong>start_date</strong> (<em>YYYYmmdd</em>) – the date to begin the historical request specified as a string in YYYYmmdd format
+examples:
+start_date=’20200101’
+start_date=’19991231’</p></li>
+<li><p><strong>end_date</strong> (<em>YYYYmmdd</em>) – the date to begin the historical request specified as a string in YYYYmmdd format
+examples:
+end_date=’20200101’
+end_date=’19991231’</p></li>
+<li><p><strong>cdr</strong> (<em>string</em>) – DEFAULT: cdr=None (uses per-security calendar)
+the two letter code to specify the calendar to use. The historical request
+will only return data for days that are included in the CDR calendar.
+To see available CDR codes, and their holidays use CDR&lt;GO&gt; in the terminal
+examples:
+cdr=’5D’ # this will return all weekdays (i.e. not saturday and sunday)
+cdr=’7D’ # this will return everyday of the week
+cdr=’US’ # this will return all valid days in the U.S. calendar (i.e. excludes weekends and holidays)</p></li>
+<li><p><strong>fx</strong> (<em>string</em>) – DEFAULT: fx=None (no currency conversion)
+The 3 letter Currency ISO code to convert the time series to
+examples:
+fx=’USD’
+fx=’CNY’</p></li>
+<li><p><strong>fill</strong> (<em>string</em><em> (</em><em>'B'</em><em> or </em><em>'P'</em><em>)</em>) – <p>DEFAULT: fill=’B’
+This will determine what to fill missing values with if there is no datapoint for a given
+day. For example if you are using cdr=’7D’ then even weekends will be returned. Obviously
+exchanges are closed on the weekend so there is no value.
+‘B’ - Blank fill. i.e. leave it as a missing value
+‘P’ - Previous fill. i.e. fill data with the previous day value. Note if the previous value</p>
+<blockquote>
+<div><p>is more than 30 days before the empty date, bloomberg API will still return a blank</p>
+</div></blockquote>
+<p>examples:
+fill=’B’
+fill=’P’</p>
+</p></li>
+<li><p><strong>usedpdf</strong> (<em>boolean</em><em> (</em><em>True</em><em>|</em><em>False</em><em>)</em>) – This determines whether the historical pricing will follow user settings in DPDF&lt;GO&gt;
+For example if the user has set NAVs to be historically adjusted for dividends,
+setting usedpdf=True will respect this. With usedpdf=False - the historical NAVs
+will be clean and not adjusted for dividend distributions
+examples:
+usedpdf=True
+usedpdf=False</p></li>
+<li><p><strong>period</strong> (<em>string</em><em> (</em><em>'D'</em><em> or </em><em>'W'</em><em> or </em><em>'M'</em><em> or </em><em>'S'</em><em> or </em><em>'Q'</em><em> or </em><em>'A'</em><em>)</em>) – The periodicity to return dates for (default = ‘D’)
+Note, this argument will override CDR. CDR only works with daily periodicity
+D : DAILY
+W : WEEKLY
+M : MONTHLY
+Q : QUARTERLY
+S : SEMI-ANNUALLY
+A : ANNUALLY
+examples:
+period=’M’
+period=’S’</p></li>
+<li><p><strong>field_ovrds</strong> (<em>string</em><em> or </em><em>list</em>) – <ul>
+<li><p>There can be multiple field overides in a query</p></li>
+<li><p>Any one of the valid overrides for the given fields</p></li>
+<li><p>To find valid field overrides, use FLDS&lt;GO&gt;, select your field and
+look at the bottom table.</p></li>
+<li><p>For example: “PX_LAST” has the optional overrides “TIME_ZONE_OVERRIDE”
+and “DIVIDEND_ADJ_LAST_PX_OVERRIDE”</p></li>
+<li><p>to use this in a query you would say: time_zone_override=12</p></li>
+<li><p>If you want to use a different override value for each ticker in the query
+you will need to supply a list instead of one value. See examples below.</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Intial setup for our examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pdblpi</span> <span class="kn">import</span> <span class="n">BDH</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># define a list of tickers</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tickers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;JPST LN Equity&#39;</span><span class="p">,</span> <span class="s1">&#39;JREG LN Equity&#39;</span><span class="p">,</span> <span class="s1">&#39;JE13 LN Equity&#39;</span><span class="p">,</span> <span class="s1">&#39;IE00BJK9H753 ISIN&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>BASIC USAGE - Simple query</p>
+<blockquote>
+<div><p>We will start by demonstrating the difference between BDH when a date range is given
+(i.e. there are multiple days between ‘start_date’ and ‘end_date’).
+We will start by showing the difference between what BDH returns when you query with
+a date range, or you are just loooking for a single date</p>
+</div></blockquote>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># single date - a simple list is returned</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">BDH</span><span class="p">(</span><span class="n">tickers</span><span class="p">,</span> <span class="s1">&#39;PX_LAST&#39;</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="s1">&#39;20200115&#39;</span><span class="p">,</span> <span class="n">end_date</span><span class="o">=</span><span class="s1">&#39;20200115&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="go">[98.8879, 98.8879, 28.873, 98.8879]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># a date range - now we get a full dataframe back</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">BDH</span><span class="p">(</span><span class="n">tickers</span><span class="p">,</span> <span class="s1">&#39;PX_LAST&#39;</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="s1">&#39;20200115&#39;</span><span class="p">,</span> <span class="n">end_date</span><span class="o">=</span><span class="s1">&#39;20200116&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="go">              ticker       date   PX_LAST</span>
+<span class="go">0     JPST LN Equity 2020-01-15   98.8879</span>
+<span class="go">1     JPST LN Equity 2020-01-16   98.9051</span>
+<span class="go">2     JREG LN Equity 2020-01-15   28.8730</span>
+<span class="go">3     JREG LN Equity 2020-01-16   28.9400</span>
+<span class="go">4     JE13 LN Equity 2020-01-15  100.1500</span>
+<span class="go">5     JE13 LN Equity 2020-01-16  100.1180</span>
+<span class="go">6  IE00BJK9H753 ISIN 2020-01-15   29.0830</span>
+<span class="go">7  IE00BJK9H753 ISIN 2020-01-16   29.1700</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># same query, but now using a currency override</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">BDH</span><span class="p">(</span><span class="n">tickers</span><span class="p">,</span> <span class="s1">&#39;PX_LAST&#39;</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="s1">&#39;20200115&#39;</span><span class="p">,</span> <span class="n">end_date</span><span class="o">=</span><span class="s1">&#39;20200116&#39;</span><span class="p">,</span> <span class="n">fx</span><span class="o">=</span><span class="s1">&#39;JPY&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="go">              ticker       date      PX_LAST</span>
+<span class="go">0     JPST LN Equity 2020-01-15  10866.79014</span>
+<span class="go">1     JPST LN Equity 2020-01-16  10894.39154</span>
+<span class="go">2     JREG LN Equity 2020-01-15   3172.79902</span>
+<span class="go">3     JREG LN Equity 2020-01-16   3187.74100</span>
+<span class="go">4     JE13 LN Equity 2020-01-15  12279.91849</span>
+<span class="go">5     JE13 LN Equity 2020-01-16  12279.61411</span>
+<span class="go">6  IE00BJK9H753 ISIN 2020-01-15   3195.87592</span>
+<span class="go">7  IE00BJK9H753 ISIN 2020-01-16   3213.07550</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># now lets look at what happens for weekends (or non-trading days)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># we&#39;ve set the CDR to 7D - but we still don&#39;t get a value back for January first as it&#39;s</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># a holiday, and there was no last price</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">BDH</span><span class="p">(</span><span class="n">tickers</span><span class="p">,</span> <span class="s1">&#39;PX_LAST&#39;</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="s1">&#39;20200101&#39;</span><span class="p">,</span> <span class="n">end_date</span><span class="o">=</span><span class="s1">&#39;20200103&#39;</span><span class="p">,</span> <span class="n">cdr</span><span class="o">=</span><span class="s1">&#39;7D&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="go">              ticker       date   PX_LAST</span>
+<span class="go">0     JPST LN Equity 2020-01-02   98.8057</span>
+<span class="go">1     JPST LN Equity 2020-01-03   98.8228</span>
+<span class="go">2     JREG LN Equity 2020-01-02   28.5330</span>
+<span class="go">3     JREG LN Equity 2020-01-03   28.4380</span>
+<span class="go">4     JE13 LN Equity 2020-01-02  100.1800</span>
+<span class="go">5     JE13 LN Equity 2020-01-03  100.2400</span>
+<span class="go">6  IE00BJK9H753 ISIN 2020-01-02   28.5650</span>
+<span class="go">7  IE00BJK9H753 ISIN 2020-01-03   28.5250</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># now if we set the fill value to &#39;P&#39; (i.e. previous value) we will see data for Jan 1st</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">BDH</span><span class="p">(</span><span class="n">tickers</span><span class="p">,</span> <span class="s1">&#39;PX_LAST&#39;</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="s1">&#39;20200101&#39;</span><span class="p">,</span> <span class="n">end_date</span><span class="o">=</span><span class="s1">&#39;20200103&#39;</span><span class="p">,</span> <span class="n">cdr</span><span class="o">=</span><span class="s1">&#39;7D&#39;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="s1">&#39;P&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="go">               ticker       date   PX_LAST</span>
+<span class="go">0      JPST LN Equity 2020-01-01   98.7690</span>
+<span class="go">1      JPST LN Equity 2020-01-02   98.8057</span>
+<span class="go">2      JPST LN Equity 2020-01-03   98.8228</span>
+<span class="go">3      JREG LN Equity 2020-01-01   28.3300</span>
+<span class="go">4      JREG LN Equity 2020-01-02   28.5330</span>
+<span class="go">5      JREG LN Equity 2020-01-03   28.4380</span>
+<span class="go">6      JE13 LN Equity 2020-01-01  100.2130</span>
+<span class="go">7      JE13 LN Equity 2020-01-02  100.1800</span>
+<span class="go">8      JE13 LN Equity 2020-01-03  100.2400</span>
+<span class="go">9   IE00BJK9H753 ISIN 2020-01-01   28.3900</span>
+<span class="go">10  IE00BJK9H753 ISIN 2020-01-02   28.5650</span>
+<span class="go">11  IE00BJK9H753 ISIN 2020-01-03   28.5250</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># now lets use the period (&quot;periodicity&quot;) parameter to return less dates</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># we are using period=&#39;A&#39; - which equates to annual.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># when using a non-daily periodicity - the date returned will always be the end of the period</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">BDH</span><span class="p">(</span><span class="n">tickers</span><span class="p">,</span> <span class="s1">&#39;PX_LAST&#39;</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="s1">&#39;20190101&#39;</span><span class="p">,</span> <span class="n">end_date</span><span class="o">=</span><span class="s1">&#39;20200131&#39;</span><span class="p">,</span> <span class="n">period</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="go">              ticker       date   PX_LAST</span>
+<span class="go">0     JPST LN Equity 2019-12-31   98.7690</span>
+<span class="go">1     JPST LN Equity 2020-12-31  101.0767</span>
+<span class="go">2     JREG LN Equity 2019-12-31   28.3300</span>
+<span class="go">3     JREG LN Equity 2020-12-31   33.2050</span>
+<span class="go">4     JE13 LN Equity 2019-12-31  100.2130</span>
+<span class="go">5     JE13 LN Equity 2020-12-31  100.1530</span>
+<span class="go">6  IE00BJK9H753 ISIN 2019-12-31   28.3900</span>
+<span class="go">7  IE00BJK9H753 ISIN 2020-12-31   34.1050</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pdblpi.BDS">
+<span class="sig-prename descclassname"><span class="pre">pdblpi.</span></span><span class="sig-name descname"><span class="pre">BDS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tickers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">field_ovrds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pdblpi.BDS" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tickers</strong> (<em>one ticker</em><em> or </em><em>a list of tickers</em>) – <p>tickers should be specified in the same format as the excel API.
+Currently Bloomberg Identifiers, ISINs, FIGIs, and SEDOLs are supported.
+Valid Format Examples:</p>
+<blockquote>
+<div><p>&gt; BBEG LN Equity
+&gt; JRUD GR Equity
+&gt; IE00BYVZV757 ISIN
+&gt; <a class="reference external" href="mailto:IE00BYVZV757&#37;&#52;&#48;BVAL">IE00BYVZV757<span>&#64;</span>BVAL</a> ISIN
+&gt; IE00BYVZV757 LN ISIN
+&gt; 2046251 SEDOL
+&gt; <a class="reference external" href="mailto:2046251&#37;&#52;&#48;BGN">2046251<span>&#64;</span>BGN</a> SEDOL
+&gt; 2046251 US SEDOL</p>
+</div></blockquote>
+</p></li>
+<li><p><strong>field</strong> (<em>string</em>) – The bloomberg field mnemonic for the datapoint you wish to use.
+Use FLDS&lt;GO&gt; on the terminal to find valid bloomberg fields.
+Only one field can be specified per query</p></li>
+<li><p><strong>field_ovrds</strong> (<em>string</em><em> or </em><em>list</em>) – <ul>
+<li><p>There can be multiple field overides in a query</p></li>
+<li><p>Any one of the valid overrides for the given fields</p></li>
+<li><p>To find valid field overrides, use FLDS&lt;GO&gt;, select your field and
+look at the bottom table.</p></li>
+<li><p>For example: “PX_LAST” has the optional overrides “TIME_ZONE_OVERRIDE”
+and “DIVIDEND_ADJ_LAST_PX_OVERRIDE”</p></li>
+<li><p>to use this in a query you would say time_zone_override=12</p></li>
+<li><p>If you want to use a different override value for each ticker in the query
+you will need to supply a list instead of one value. See examples below.</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p><strong>data</strong> –</p>
+<ul class="simple">
+<li><p>A list of the datapoints is returned. 1 datapoint is returned per security queried.</p></li>
+<li><p>If one of the tickers you input is not valid the value for that ticker will be
+“security not found”</p></li>
+<li><p>If there is no data for the field you specified - the list will contain a None value</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pdblpi.BEQS">
+<span class="sig-prename descclassname"><span class="pre">pdblpi.</span></span><span class="sig-name descname"><span class="pre">BEQS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eqs_screen_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_of_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pdblpi.BEQS" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>eqs_screen_name</strong> (<em>string</em>) – This is the name of the screen you want to pull data for.
+The screen must be defined by the user (or shared with) in EQS&lt;GO&gt;
+on the terminal beforehand</p></li>
+<li><p><strong>as_of_date</strong> (<em>string</em><em> (</em><em>YYYYmmdd</em><em>)</em>) – The date as of which to run the screen for.
+If not specified by the user, defaults to today</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>tickers</strong> – Returns a list of tickers that meet the criteria on the as of date</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Assume the user has a screen called “Europe ETFs”</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pdblpi</span> <span class="kn">import</span> <span class="n">BEQS</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">etfs</span> <span class="o">=</span> <span class="n">BEQS</span><span class="p">(</span><span class="s2">&quot;Europe ETFs&quot;</span><span class="p">,</span> <span class="n">as_of_date</span><span class="o">=</span><span class="s1">&#39;20200101&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pdblpi.SECF">
+<span class="sig-prename descclassname"><span class="pre">pdblpi.</span></span><span class="sig-name descname"><span class="pre">SECF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">queries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_results</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pdblpi.SECF" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>queries</strong> (<em>str</em><em> or </em><em>list</em>) – the search terms to be quiried. Identical functionality to using
+SECF&lt;GO&gt; in the terminal</p></li>
+<li><p><strong>filt</strong> (<em>str</em>) – Filter the search results by bloomberg asset class.
+Possible values are:
+- EQTY
+- GOVT
+- CMDT
+- INDX
+- CURR
+- CORP
+- MUNI
+- PRFD
+- CLNT
+- MMKT
+- MTGE</p></li>
+<li><p><strong>max_results</strong> (<em>int</em>) – the maximum number of matches to return</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>Pandas dataframe with columns</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>query, ticker, description, position</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pdblpi.BCDE">
+<span class="sig-prename descclassname"><span class="pre">pdblpi.</span></span><span class="sig-name descname"><span class="pre">BCDE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pdblpi.BCDE" title="Permalink to this definition"></a></dt>
+<dd><p>Upload new data to bloomberg fields defined in CDE&lt;GO&gt;
+:param df: The Dataframe must have the following columns:</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt><cite>ticker</cite>: the bloomberg identifier for the upload. it is reccomended to use ID_BB_GLOBAL + “FIGI”</dt><dd><p>for this identifier. Bloomberg sometimes has issues with other identifiers such as Ticker</p>
+</dd>
+</dl>
+</li>
+<li><p><cite>date</cite>: the as of date for the field update. Must be a datetime rather than string</p></li>
+<li><p>one column with the correct values for each field you wish to upload for</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pdblpi.HDS">
+<span class="sig-prename descclassname"><span class="pre">pdblpi.</span></span><span class="sig-name descname"><span class="pre">HDS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tickers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pdblpi.HDS" title="Permalink to this definition"></a></dt>
+<dd><p>Return information about the holders of a given security. Mirrors HDS&lt;GO&gt; functionality</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tickers</strong> (<em>one ticker</em><em> or </em><em>a list of tickers</em>) – <p>tickers should be specified in the same format as the excel API.
+Currently Bloomberg Identifiers, ISINs, FIGIs, and SEDOLs are supported.
+Valid Format Examples:</p>
+<blockquote>
+<div><p>&gt; BBEG LN Equity
+&gt; JRUD GR Equity
+&gt; IE00BYVZV757 ISIN
+&gt; <a class="reference external" href="mailto:IE00BYVZV757&#37;&#52;&#48;BVAL">IE00BYVZV757<span>&#64;</span>BVAL</a> ISIN
+&gt; IE00BYVZV757 LN ISIN
+&gt; 2046251 SEDOL
+&gt; <a class="reference external" href="mailto:2046251&#37;&#52;&#48;BGN">2046251<span>&#64;</span>BGN</a> SEDOL
+&gt; 2046251 US SEDOL</p>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>df</strong> – dataframe with each holder in the portfolio
+To view parent level - filter <cite>insider_status</cite> for ‘N-P’</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pdblpi.BQL">
+<span class="sig-prename descclassname"><span class="pre">pdblpi.</span></span><span class="sig-name descname"><span class="pre">BQL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">universe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_dates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_headers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_query</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transpose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_dates_desc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_by_fields</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_all_cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pdblpi.BQL" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pdblpi.MEMB">
+<span class="sig-prename descclassname"><span class="pre">pdblpi.</span></span><span class="sig-name descname"><span class="pre">MEMB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tickers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reweight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_cash</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_reweight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pdblpi.MEMB" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>all_cols</strong> (<em>bool</em>) – Whether to return all columns in the BQL query or just ticker, portfolio ticker, position, weight</p></li>
+<li><p><strong>reweight</strong> (<em>bool</em>) – Return a dataframe with the added column ‘reweight’ which will always sum to 100%</p></li>
+<li><p><strong>add_cash</strong> (<em>bool</em>) – add a line item for cash when weight doesn’t add up to 100%</p></li>
+<li><p><strong>valid_reweight</strong> (<em>bool</em>) – Further reweighting column named ‘valid_reweight’ to return weights only for those that are recognised
+bloomberg tickers</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pdblpi.EPRX">
+<span class="sig-prename descclassname"><span class="pre">pdblpi.</span></span><span class="sig-name descname"><span class="pre">EPRX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tickers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decomp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pdblpi.EPRX" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tickers</strong> (<em>str</em><em> or </em><em>list-like</em>) – the list of tickers to return exchagne information for</p></li>
+<li><p><strong>subset</strong> (<em>str</em><em> or </em><em>list-like</em>) – the subset of datapoints to return information for.
+Possible values include:
+- country_iso_code
+- country_name
+- region
+- composite_flag
+- bbg_exch_code
+- mic
+- asset_classes
+- exchange_name
+- acronym
+- venue_type
+- cdr_code
+- website_url
+- trading_days
+- timezone
+- pytz_timezone
+- data_delivery
+- ats
+- exch_company_ticker
+- rulebook_url
+- parent_flag
+- composite_exch_code
+- update_time
+- sample_equity_ticker
+- equity_close_price
+- equity_market_open
+- equity_market_close
+- equity_settlement_cycle
+- volume_ticker
+- turnover_ticker
+- eu_comp_exch_code
+- equity_delay_time
+- equity_entitlement_id
+- Foreign Security(Eq)
+- equity_trading_currency
+- AM Block Trade(Eq)
+- AM Closing Auction Call(Eq)
+- AM Closing Match Auction(Eq)
+- AM Continuous Trading Period(Eq)
+- AM Negotiated Market(Eq)
+- AM Opening Auction Call(Eq)
+- AM Opening Match Auction(Eq)
+- AM Preopening(Eq)
+- After Hours(Eq)
+- Block Trade(Eq)
+- Closing Auction Call Phase(Eq)
+- Cash Market(Eq)
+- Closing Match Auction(Eq)
+- Continuous Trading Period(Eq)
+- Lunch Break(Eq)
+- Mid-Day Auction(Eq)
+- Odd-Lot(Eq)
+- Opening Auction Call Phase(Eq)
+- Opening Match Auction(Eq)
+- PM Block Trade(Eq)
+- PM Closing Auction Call(Eq)
+- PM Closing Match Auction(Eq)
+- PM Continuous Trading Period(Eq)
+- PM Negotiated Market(Eq)
+- PM Opening Match Auction(Eq)
+- PM Opening Auction Call(Eq)
+- PM Preopening(Eq)
+- Post Close(Eq)
+- Preopening(Eq)
+- Scheduled Auction Call(Eq)
+- Trade at Close(Eq)</p></li>
+<li><p><strong>decomp</strong> (<em>bool</em>) – Whether to find the primary exchange when a composite is passed through or
+not. Setting decomp to true will mean composite securities will return data
+for their primary exchange while setting it to false means they will return
+the limited information available about a composite</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pdblpi.BBAT">
+<span class="sig-prename descclassname"><span class="pre">pdblpi.</span></span><span class="sig-name descname"><span class="pre">BBAT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tickers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inav</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fair_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">summary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pdblpi.BBAT" title="Permalink to this definition"></a></dt>
+<dd><p>Bloomberg Bid, Ask, Trade data (BBAT)
+This will take intraday bids, asks, and trades and pivot them into a nice timeseries.
+In addition, lots of common statistics are calculated and trading periods can be filtered out</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tickers</strong> (<em>one ticker</em><em> or </em><em>a list of tickers</em>) – <p>tickers should be specified in the same format as the excel API.
+Currently Bloomberg Identifiers, ISINs, FIGIs, and SEDOLs are supported.
+Valid Format Examples:</p>
+<blockquote>
+<div><p>&gt; BBEG LN Equity
+&gt; JRUD GR Equity
+&gt; IE00BYVZV757 ISIN
+&gt; <a class="reference external" href="mailto:IE00BYVZV757&#37;&#52;&#48;BVAL">IE00BYVZV757<span>&#64;</span>BVAL</a> ISIN
+&gt; IE00BYVZV757 LN ISIN
+&gt; 2046251 SEDOL
+&gt; <a class="reference external" href="mailto:2046251&#37;&#52;&#48;BGN">2046251<span>&#64;</span>BGN</a> SEDOL
+&gt; 2046251 US SEDOL</p>
+</div></blockquote>
+<p>examples:
+tickers=’JPST LN Equity’
+tickers=[‘JPST LN Equity’, ‘2046251 US SEDOL’]</p>
+</p></li>
+<li><p><strong>sd</strong> (<em>YYYYmmdd</em>) – the date to begin the historical request specified as a string in YYYYmmdd format
+examples:
+start_date=’20200101’
+start_date=’19991231’</p></li>
+<li><p><strong>sd</strong> – the date to begin the historical request specified as a string in YYYYmmdd format
+examples:
+end_date=’20200101’
+end_date=’19991231’</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pdblpi.BDIT">
+<span class="sig-prename descclassname"><span class="pre">pdblpi.</span></span><span class="sig-name descname"><span class="pre">BDIT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tickers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">events</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cond_codes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qrm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_codes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exch_codes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">broker_codes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indicator_codes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trade_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pdblpi.BDIT" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tickers</strong> (<em>one ticker</em><em> or </em><em>a list of tickers</em>) – <p>tickers should be specified in the same format as the excel API.
+Currently Bloomberg Identifiers, ISINs, FIGIs, and SEDOLs are supported.
+Valid Format Examples:</p>
+<blockquote>
+<div><p>&gt; BBEG LN Equity
+&gt; JRUD GR Equity
+&gt; IE00BYVZV757 ISIN
+&gt; <a class="reference external" href="mailto:IE00BYVZV757&#37;&#52;&#48;BVAL">IE00BYVZV757<span>&#64;</span>BVAL</a> ISIN
+&gt; IE00BYVZV757 LN ISIN
+&gt; 2046251 SEDOL
+&gt; <a class="reference external" href="mailto:2046251&#37;&#52;&#48;BGN">2046251<span>&#64;</span>BGN</a> SEDOL
+&gt; 2046251 US SEDOL</p>
+</div></blockquote>
+<p>examples:
+tickers=’JPST LN Equity’
+tickers=[‘JPST LN Equity’, ‘2046251 US SEDOL’]</p>
+</p></li>
+<li><p><strong>events</strong> (<em>string</em><em> or </em><em>list</em>) – the name of the bloomberg events you want to include.
+Possible values include:
+- BID
+- ASK
+- TRADE
+- MID_PRICE
+- AT_TRADE
+- BEST_BID
+- BEST_ASK</p></li>
+<li><p><strong>sd</strong> (<em>YYYYmmdd HH:MM:SS</em>) – the date to begin the historical request specified as a string in YYYYmmdd format
+examples:
+sd=’20200101’
+sd=’19991231’</p></li>
+<li><p><strong>ed</strong> (<em>YYYYmmdd HH:MM:SS</em>) – the date to begin the historical request specified as a string in YYYYmmdd format
+examples:
+ed=’20200101’
+ed=’19991231’</p></li>
+<li><p><strong>cond_codes</strong> (<em>bool</em>) – display the condition codes column for each quote/trade</p></li>
+<li><p><strong>qrm</strong> (<em>bool</em>) – import additional trades that only show in QRM</p></li>
+<li><p><strong>action_codes</strong> (<em>bool</em>) – display the action codes column</p></li>
+<li><p><strong>broker_codes</strong> (<em>bool</em>) – display the broker codes column</p></li>
+<li><p><strong>indicator_codes</strong> (<em>bool</em>) – display indicator codes column</p></li>
+<li><p><strong>trade_time</strong> (<em>bool</em>) – display the time of a trade. This can differ from the time the trade was printed
+to the ticker in the case of delayed reporting</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Intial setup for our examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pdblpi</span> <span class="kn">import</span> <span class="n">BDIT</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">BDIT</span><span class="p">(</span><span class="s1">&#39;JPST LN Equity&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;BEST_BID&#39;</span><span class="p">,</span> <span class="s1">&#39;BEST_ASK&#39;</span><span class="p">],</span> <span class="s1">&#39;20220125 10:00:00&#39;</span><span class="p">,</span> <span class="s1">&#39;20220125 12:00:00&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Milo Elliott.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
